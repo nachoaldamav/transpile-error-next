@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  transpilePackages: ['@acme/my-component'],
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
