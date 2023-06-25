@@ -1,34 +1,18 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Next doesn't refresh components when the directory is not fully symlinked
 
-## Getting Started
+> This repo is a reproduction of a bug in Next.js. The Node_modules directory is being uploaded to make the reproduction easier.
 
-First, run the development server:
+In this repo I show how Next.js doesn't refresh the page when a component is recompiled and the directory is not fully symlinked. (Only the `index.tsx` file is symlinked, and the other files in the component (package) are generated in the `node_modules/@acme/my-component` directory).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## Steps to reproduce
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Clone this repo
+2. Run `cd node_modules/@acme/my-component` and `pnpm dev` to start the component compilation (Don't install the dependencies as it will break the reproduction)
+3. In another terminal, run `pnpm dev` in the root directory to start the Next.js app
+4. Open `http://localhost:3000` in your browser
+5. Edit the `my-awesome-component/index.tsx` file and save it
+6. The component should be recompiled, but the page is not refreshed
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Expected behavior
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The page should be refreshed when the component is recompiled. Next compiles something, but it's not the component.
